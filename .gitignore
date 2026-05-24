@@ -14,6 +14,7 @@ result-*
 *.dll
 *.so
 *.dylib
+goku
 
 # Test binary, built with `go test -c`
 *.test
