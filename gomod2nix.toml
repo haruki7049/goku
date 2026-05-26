@@ -9,6 +9,10 @@ schema = 3
     version = 'v1.0.0'
     hash = 'sha256-YeOXzCqLsTJssPGMgp56Fe1YDRd7RIkyHywr7/5rBRs='
 
+  [mod.'github.com/ebitengine/oto/v3']
+    version = 'v3.4.0'
+    hash = 'sha256-8JU4iu+2pUKWVWMpEe8EAZ8FVo3MZdILu82vVVmDSVY='
+
   [mod.'github.com/ebitengine/purego']
     version = 'v0.9.0'
     hash = 'sha256-jSlhGjhuYf15zHy7shSKR1rQN1sRyH5zXAzWqy+huHY='
@@ -16,6 +20,10 @@ schema = 3
   [mod.'github.com/hajimehoshi/ebiten/v2']
     version = 'v2.9.9'
     hash = 'sha256-3cc5DzNE9hq561rVeS25FcV7cZJ/d33nkzwX5Cpc71U='
+
+  [mod.'github.com/hajimehoshi/go-mp3']
+    version = 'v0.3.4'
+    hash = 'sha256-h6l0PuIS0h1zdB8MEqHTTgg8dE6nL6PSOt583ymaPnA='
 
   [mod.'github.com/jezek/xgb']
     version = 'v1.1.1'
