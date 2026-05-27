@@ -35,6 +35,16 @@
         }:
         let
           overlays = [ inputs.gomod2nix.overlays.default ];
+          buildInputs = lib.optionals pkgs.stdenv.isLinux [
+            pkgs.libx11
+            pkgs.libxrandr
+            pkgs.libGL
+            pkgs.libxcursor
+            pkgs.libxinerama
+            pkgs.libxi
+            pkgs.libxxf86vm
+            pkgs.libglvnd
+          ];
 
           goku = pkgs.buildGoApplication {
             name = "goku";
@@ -77,12 +87,15 @@
           };
 
           devShells.default = pkgs.mkShell {
+            inherit buildInputs;
             nativeBuildInputs = [
               pkgs.go # Golang
               pkgs.nil # Nix LSP
               pkgs.gopls # Golang LSP
               pkgs.gomod2nix # gomod2nix for creating Hashes (./gomod2nix.toml)
             ];
+
+            env.LD_LIBRARY_PATH = lib.makeLibraryPath buildInputs;
 
             inputsFrom = [ config.treefmt.build.devShell ];
           };
