@@ -2,6 +2,9 @@ package main
 
 import (
 	"log"
+	"net/http"
+	"io"
+	"encoding/json"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -12,7 +15,7 @@ type GameState int
 
 func (gs *GameState) Cycle() {
 	*gs += 1
-	if *gs > BarBar {
+	if *gs > GetAdvice {
 		*gs = HelloWorld
 	}
 }
@@ -20,29 +23,61 @@ func (gs *GameState) Cycle() {
 const (
 	_ GameState = iota
 	HelloWorld
-	FooFoo
-	BarBar
+	GetAdvice
 )
 
+type Response struct {
+	Slip Slip `json:"slip"`
+}
+
+type Slip struct {
+	ID int `json:"id"`
+	Advice string `json:"advice"`
+}
+
 type Game struct {
-	keys  []ebiten.Key
+	message string
 	state GameState
 }
 
 func (g *Game) Update() error {
 	if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
 		g.state.Cycle()
+
+		if g.state == GetAdvice {
+			g.message = "Loading..."
+			go g.fetchMessage()
+		}
 	}
+	return nil
+}
+
+func (g *Game) fetchMessage() error {
+	resp, err := http.Get("https://api.adviceslip.com/advice")
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+
+	var response Response
+	if err := json.Unmarshal(body, &response); err != nil {
+		return err
+	}
+
+	g.message = response.Slip.Advice
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	if g.state == HelloWorld {
-		ebitenutil.DebugPrint(screen, "Hello, World!")
-	} else if g.state == FooFoo {
-		ebitenutil.DebugPrint(screen, "FooFoo!")
-	} else if g.state == BarBar {
-		ebitenutil.DebugPrint(screen, "BarBar!")
+		ebitenutil.DebugPrint(screen, "Hello, World!\n" + "You can toggle screen mode between\nGetAdvice and HelloWorld.")
+	} else if g.state == GetAdvice {
+		ebitenutil.DebugPrint(screen, g.message + "\n" + "You can toggle screen mode between\nGetAdvice and HelloWorld.")
 	} else {
 		ebitenutil.DebugPrint(screen, "Unknown GameState is found")
 	}
