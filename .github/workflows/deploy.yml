@@ -31,7 +31,7 @@ jobs:
           # Build WebAssembly binary
           GOOS=js GOARCH=wasm go build -o public/goku.wasm main.go
           # Copy wasm_exec.js from Go installation
-          cp $(go env GOROOT)/misc/wasm/wasm_exec.js public/
+          cp $(go env GOROOT)/lib/wasm/wasm_exec.js public/
           # Copy HTML file
           cp index.html public/
 
