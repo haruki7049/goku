@@ -1,10 +1,10 @@
 package main
 
 import (
+	"encoding/json"
+	"io"
 	"log"
 	"net/http"
-	"io"
-	"encoding/json"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -31,13 +31,13 @@ type Response struct {
 }
 
 type Slip struct {
-	ID int `json:"id"`
+	ID     int    `json:"id"`
 	Advice string `json:"advice"`
 }
 
 type Game struct {
 	message string
-	state GameState
+	state   GameState
 }
 
 func (g *Game) Update() error {
@@ -75,9 +75,9 @@ func (g *Game) fetchMessage() error {
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	if g.state == HelloWorld {
-		ebitenutil.DebugPrint(screen, "Hello, World!\n" + "You can toggle screen mode by Space Key between\nGetAdvice and HelloWorld.")
+		ebitenutil.DebugPrint(screen, "Hello, World!\n"+"You can toggle screen mode by Space Key between\nGetAdvice and HelloWorld.")
 	} else if g.state == GetAdvice {
-		ebitenutil.DebugPrint(screen, g.message + "\n" + "You can toggle screen mode by Space Key between\nGetAdvice and HelloWorld.")
+		ebitenutil.DebugPrint(screen, g.message+"\n"+"You can toggle screen mode by Space Key between\nGetAdvice and HelloWorld.")
 	} else {
 		ebitenutil.DebugPrint(screen, "Unknown GameState is found")
 	}
