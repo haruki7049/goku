@@ -6,12 +6,15 @@
   </head>
 
   <body>
-    <script src="wasm_exec.js"></script>
-    <script>
-      const go = new Go();
-      WebAssembly.instantiateStreaming(fetch("goku.wasm"), go.importObject).then(result => {
-        go.run(result.instance);
-      });
-    </script>
+    <iframe srcdoc="
+      <!DOCTYPE html>
+      <script src=&quot;wasm_exec.js^quot;></script>
+      <script>
+        const go = new Go();
+        WebAssembly.instantiateStreaming(fetch(&quot;goku.wasm&quot;), go.importObject).then(result => {
+          go.run(result.instance);
+        });
+      </script>
+    " width="640" height="480"></iframe>
   </body>
 </html>
