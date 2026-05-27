@@ -27,12 +27,12 @@ const (
 )
 
 type Response struct {
-	slip Slip `json:"slip"`
+	Slip Slip `json:"slip"`
 }
 
 type Slip struct {
-	id int `json:"id"`
-	advice string `json:"advice"`
+	ID int `json:"id"`
+	Advice string `json:"advice"`
 }
 
 type Game struct {
@@ -43,6 +43,11 @@ type Game struct {
 func (g *Game) Update() error {
 	if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
 		g.state.Cycle()
+
+		if g.state == GetAdvice {
+			g.message = "Loading..."
+			go g.fetchMessage()
+		}
 	}
 	return nil
 }
@@ -64,17 +69,15 @@ func (g *Game) fetchMessage() error {
 		return err
 	}
 
-	g.message = response.slip.advice
+	g.message = response.Slip.Advice
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	if g.state == HelloWorld {
-		ebitenutil.DebugPrint(screen, "Hello, World!")
+		ebitenutil.DebugPrint(screen, "Hello, World!\n" + "You can toggle screen mode between\nGetAdvice and HelloWorld.")
 	} else if g.state == GetAdvice {
-		ebitenutil.DebugPrint(screen, "Loading...")
-		go g.fetchMessage()
-		ebitenutil.DebugPrint(screen, g.message)
+		ebitenutil.DebugPrint(screen, g.message + "\n" + "You can toggle screen mode between\nGetAdvice and HelloWorld.")
 	} else {
 		ebitenutil.DebugPrint(screen, "Unknown GameState is found")
 	}
