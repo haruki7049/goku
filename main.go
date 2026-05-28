@@ -74,11 +74,12 @@ func (g *Game) fetchMessage() error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	if g.state == HelloWorld {
+	switch g.state {
+	case HelloWorld:
 		ebitenutil.DebugPrint(screen, "Hello, World!\n"+"You can toggle screen mode by Space Key between\nGetAdvice and HelloWorld.")
-	} else if g.state == GetAdvice {
+	case GetAdvice:
 		ebitenutil.DebugPrint(screen, g.message+"\n"+"You can toggle screen mode by Space Key between\nGetAdvice and HelloWorld.")
-	} else {
+	default:
 		ebitenutil.DebugPrint(screen, "Unknown GameState is found")
 	}
 }
