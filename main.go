@@ -9,21 +9,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
-)
-
-type GameState int
-
-func (gs *GameState) Cycle() {
-	*gs += 1
-	if *gs > GetAdvice {
-		*gs = HelloWorld
-	}
-}
-
-const (
-	_ GameState = iota
-	HelloWorld
-	GetAdvice
+	states "github.com/haruki7049/goku/internals/states"
 )
 
 type Response struct {
@@ -37,14 +23,14 @@ type Slip struct {
 
 type Game struct {
 	message string
-	state   GameState
+	state   states.GameState
 }
 
 func (g *Game) Update() error {
 	if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
 		g.state.Cycle()
 
-		if g.state == GetAdvice {
+		if g.state == states.GetAdvice {
 			g.message = "Loading..."
 			go g.fetchMessage()
 		}
@@ -75,9 +61,9 @@ func (g *Game) fetchMessage() error {
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	switch g.state {
-	case HelloWorld:
+	case states.HelloWorld:
 		ebitenutil.DebugPrint(screen, "Hello, World!\n"+"You can toggle screen mode by Space Key between\nGetAdvice and HelloWorld.")
-	case GetAdvice:
+	case states.GetAdvice:
 		ebitenutil.DebugPrint(screen, g.message+"\n"+"You can toggle screen mode by Space Key between\nGetAdvice and HelloWorld.")
 	default:
 		ebitenutil.DebugPrint(screen, "Unknown GameState is found")
@@ -91,7 +77,7 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 func main() {
 	ebiten.SetWindowSize(640, 480)
 	ebiten.SetWindowTitle("Hello, World!")
-	if err := ebiten.RunGame(&Game{state: HelloWorld}); err != nil {
+	if err := ebiten.RunGame(&Game{state: states.HelloWorld}); err != nil {
 		log.Fatal(err)
 	}
 }
